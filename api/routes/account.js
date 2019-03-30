@@ -30,15 +30,24 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/login', (req, res, next) => {
+    login(req, res);
+});
+
+
+router.post("/signup", (req, res, next) => {
+    insertAccount(req, res);
+});
+
+function login(req, res) {
     const query = {
         text: 'SELECT a."Id", "UserName", "Password", ' +
             'p."FirstName", p."LastName", p."Email", p."Birthday", g."Name" as "Gender", ' +
             'ci."Name" as "City", co."Name" as "Country", p."Avatar" ' +
             'FROM "Account" a ' +
-            'JOIN "Profile" p ON (a."Id" = p."Account_Id") ' +
-            'JOIN "Gender" g ON (p."Gender" = g."Id") ' +
-            'JOIN "City" ci ON (p."Address" = ci."Id") ' +
-            'JOIN "Country" co ON (ci."Country_code" = co."Code") ' +
+            'FULL OUTER JOIN "Profile" p ON (a."Id" = p."Account_Id") ' +
+            'FULL OUTER JOIN "Gender" g ON (p."Gender" = g."Id") ' +
+            'FULL OUTER JOIN "City" ci ON (p."Address" = ci."Id") ' +
+            'FULL OUTER JOIN "Country" co ON (ci."Country_code" = co."Code") ' +
             'WHERE a."UserName"=$1 AND a."Password"=$2',
         values: [req.body.UserName, req.body.Password],
     }
@@ -55,12 +64,7 @@ router.post('/login', (req, res, next) => {
         body.account = result.rows[0];
         res.status(status.code).send(body);
     })
-});
-
-
-router.post("/signup", (req, res, next) => {
-    insertAccount(req, res);
-});
+}
 
 function insertAccount(req, res) {
     const query = {
