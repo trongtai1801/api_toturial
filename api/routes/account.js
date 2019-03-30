@@ -105,4 +105,5 @@ function insertProfile(accountId, res) {
         }
     });
 }
+
 module.exports = router;

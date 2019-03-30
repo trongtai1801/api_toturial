@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 
 const accountRoutes = require('./api/routes/account');
+const profileRoutes = req('./api/routes/profile');
 
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({extended: false}));
@@ -23,6 +24,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/accounts', accountRoutes);
+app.use('/profiles', profileRoutes);
 
 app.use((req, res, next) => {
     const error = new Error('Not found');
